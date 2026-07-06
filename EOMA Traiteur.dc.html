@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Poppins:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',sans-serif;background:#245613;color:#EDE7D8;-webkit-font-smoothing:antialiased;line-height:1.6}
+  ::selection{background:#C9A55C;color:#163C0B}
+  a{color:inherit}
+  @keyframes eomaFade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .eoma-page{animation:eomaFade .6s ease both}
+  @media(max-width:880px){
+    .nav-desktop{display:none!important}
+    .nav-burger{display:flex!important}
+  }
+  @media(min-width:881px){
+    .nav-burger{display:none!important}
+    .mobile-menu{display:none!important}
+  }
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+
+<div style="min-height:100vh;background:#245613">
+
+<!-- ===================== HEADER (partagé) ===================== -->
+<header style="position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,52,9,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,165,92,.18)">
+  <div style="max-width:1280px;margin:0 auto;padding:14px clamp(20px,5vw,56px);display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div onClick="{{ toAccueil }}" style="cursor:pointer;display:flex;align-items:center">
+      <img src="logo-eoma-light.png" alt="ÉOMA Traiteur" style="height:52px;width:auto;display:block">
+    </div>
+
+    <nav class="nav-desktop" style="display:flex;gap:30px;align-items:center">
+      <sc-for list="{{ nav }}" as="item" hint-placeholder-count="6">
+        <a onClick="{{ item.onClick }}" style="{{ item.linkStyle }}">{{ item.label }}</a>
+      </sc-for>
+    </nav>
+
+    <div class="nav-desktop" style="display:flex">
+      <button onClick="{{ toContact }}" style="padding:12px 24px;background:#C9A55C;color:#163C0B;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;letter-spacing:.02em;cursor:pointer;box-shadow:0 8px 22px rgba(201,165,92,.28);transition:transform .25s" style-hover="{transform:'translateY(-2px)'}">Demander un devis</button>
+    </div>
+
+    <button class="nav-burger" onClick="{{ toggleMenu }}" style="display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px">
+      <span style="width:24px;height:2px;background:#C9A55C;display:block"></span>
+      <span style="width:24px;height:2px;background:#C9A55C;display:block"></span>
+      <span style="width:24px;height:2px;background:#C9A55C;display:block"></span>
+    </button>
+  </div>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div class="mobile-menu" style="border-top:1px solid rgba(201,165,92,.18);padding:16px clamp(20px,5vw,56px) 26px;display:flex;flex-direction:column;gap:4px;background:rgba(22,52,9,.98)">
+      <sc-for list="{{ nav }}" as="item" hint-placeholder-count="6">
+        <a onClick="{{ item.onClick }}" style="{{ item.mLinkStyle }}">{{ item.label }}</a>
+      </sc-for>
+      <button onClick="{{ toContact }}" style="margin-top:14px;padding:14px;background:#C9A55C;color:#163C0B;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;cursor:pointer">Demander un devis</button>
+    </div>
+  </sc-if>
+</header>
+
+<main style="padding-top:70px">
+
+<!-- ===================== PAGE : ACCUEIL ===================== -->
+<sc-if value="{{ isAccueil }}" hint-placeholder-val="{{ true }}">
+<div class="eoma-page">
+  <!-- HERO -->
+  <section style="background:linear-gradient(160deg,#163C0B,#245613 60%,#2E7A18);padding:clamp(60px,9vw,120px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(40px,5vw,72px);align-items:center">
+      <div>
+        <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:#C9A55C">Cuisine cosmopolite· Fait maison</span>
+        <h1 style="font-family:'Playfair Display',serif;font-weight:700;color:#C9A55C;font-size:clamp(38px,5.4vw,64px);line-height:1.08;margin:22px 0 20px;text-wrap:balance">L’Art de créer du Bonheur à travers la Nourriture</h1>
+        <p style="font-size:clamp(16px,1.6vw,19px);color:rgba(237,231,216,.85);max-width:520px;margin-bottom:36px">Cuisine faite maison, fraîche et de saison. Une table d’exception pour vos événements d’entreprise et vos réceptions. privée</p>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <button onClick="{{ toEntreprises }}" style="padding:15px 30px;background:#C9A55C;color:#163C0B;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 28px rgba(201,165,92,.3);transition:transform .25s" style-hover="{transform:'translateY(-2px)'}">Traiteur Entreprise</button>
+          <button onClick="{{ toMariages }}" style="padding:15px 30px;background:transparent;color:#EDE7D8;border:1.5px solid rgba(237,231,216,.45);border-radius:999px;font-family:'Poppins',sans-serif;font-weight:500;font-size:14px;letter-spacing:.02em;cursor:pointer;transition:border-color .25s,color .25s" style-hover="{borderColor:'#C9A55C',color:'#C9A55C'}">Mariages &amp; Réceptions</button>
+        </div>
+      </div>
+      <div style="position:relative">
+        <div style="aspect-ratio:4/5;border-radius:20px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.4)">
+          <image-slot id="home-hero" style="width:100%;height:100%;display:block" radius="20" placeholder="Photo plat signature (gros plan)" src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=1000&q=75&auto=format&fit=crop"></image-slot>
+        </div>
+        <div style="position:absolute;bottom:-22px;left:-22px;background:#F5F0E6;color:#245613;padding:18px 24px;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.3);max-width:220px">
+          <div style="font-family: 'Playfair Display',serif; font-size: 20px; color: #8a6d2f; font-weight: 600; width: 175px; height: 73px">Traiteur en Îles de France</div>
+          <div style="font-size:12px;color:#4a5a4d;margin-top:2px">Paris · Île-de-France ·</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RÉASSURANCE -->
+  <section style="background:#F5F0E6;color:#2A3B30;padding:clamp(28px,3vw,40px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;text-align:center">
+      <sc-for list="{{ reassurance }}" as="r" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px">
+          <span style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:#8a6d2f;letter-spacing:.02em">{{ r }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- PRESTATIONS -->
+  <section style="background:#163C0B;padding:clamp(60px,8vw,110px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:56px">
+        <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:#C9A55C">Nos prestations</span>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(30px,4vw,46px);color:#EDE7D8;margin-top:14px">Une cuisine pour chaque occasion</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:26px">
+        <sc-for list="{{ prestations }}" as="p" hint-placeholder-count="4">
+          <div onClick="{{ p.onClick }}" style="background:#245613;border:1px solid rgba(201,165,92,.15);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .3s,box-shadow .3s" style-hover="{transform:'translateY(-6px)',boxShadow:'0 24px 50px rgba(0,0,0,.35)'}">
+            <div style="aspect-ratio:4/3">
+              <image-slot id="{{ p.slot }}" style="width:100%;height:100%;display:block" radius="0" placeholder="{{ p.ph }}" src="{{ p.img }}"></image-slot>
+            </div>
+            <div style="padding:24px 22px 28px">
+              <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:#C9A55C;margin-bottom:10px">{{ p.title }}</h3>
+              <p style="font-size:14px;color:rgba(237,231,216,.78);margin-bottom:16px">{{ p.desc }}</p>
+              <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#C9A55C">Découvrir →</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEASER ÉCO -->
+  <section style="background:#F5F0E6;color:#2A3B30;padding:clamp(60px,8vw,110px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(36px,5vw,64px);align-items:center">
+      <div style="aspect-ratio:5/4;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.15)">
+        <image-slot id="home-eco" style="width:100%;height:100%;display:block" radius="18" placeholder="Produits frais &amp; de saison" src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1000&q=75&auto=format&fit=crop"></image-slot>
+      </div>
+      <div>
+        <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:#8a6d2f">Notre démarche</span>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3.6vw,42px);color:#245613;margin:14px 0 18px;line-height:1.15">Une cuisine responsable, ancrée avec des producteurs Français</h2>
+        <p style="font-size:16px;color:#4a5a4d;margin-bottom:28px;max-width:520px">100% fait maison, produits frais et de saison, circuit court auprès des producteurs Français. Une démarche écoresponsable, du choix des ingrédients aux contenants.</p>
+        <button onClick="{{ toEngagements }}" style="padding:14px 28px;background:#77C33D;color:#163C0B;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:background .25s" style-hover="{background:'#66AE30'}">Nos engagements →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEASER GALERIE -->
+  <section style="background:#245613;padding:clamp(60px,8vw,100px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:36px">
+        <div>
+          <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:#C9A55C">En images</span>
+          <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3.6vw,42px);color:#EDE7D8;margin-top:12px">La galerie</h2>
+        </div>
+        <button onClick="{{ toGalerie }}" style="padding:12px 26px;background:transparent;color:#C9A55C;border:1.5px solid rgba(201,165,92,.45);border-radius:999px;font-family:'Poppins',sans-serif;font-size:13px;cursor:pointer;transition:background .25s,color .25s" style-hover="{background:'#C9A55C',color:'#163C0B'}">Voir la galerie</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+        <div style="aspect-ratio:1;border-radius:12px;overflow:hidden"><image-slot id="home-gal-1" style="width:100%;height:100%;display:block" radius="12" placeholder="Buffet" src="photos/buffet-1.png"></image-slot></div>
+        <div style="aspect-ratio:1;border-radius:12px;overflow:hidden"><image-slot id="home-gal-2" style="width:100%;height:100%;display:block" radius="12" placeholder="Cocktail" src="photos/cocktail-1.png"></image-slot></div>
+        <div style="aspect-ratio:1;border-radius:12px;overflow:hidden"><image-slot id="home-gal-3" style="width:100%;height:100%;display:block" radius="12" placeholder="Dressage" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=75&auto=format&fit=crop"></image-slot></div>
+        <div style="aspect-ratio:1;border-radius:12px;overflow:hidden"><image-slot id="home-gal-4" style="width:100%;height:100%;display:block" radius="12" placeholder="Mijoté" src="https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=800&q=75&auto=format&fit=crop"></image-slot></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVIS -->
+  <section style="background:#F5F0E6;color:#2A3B30;padding:clamp(60px,8vw,110px) clamp(20px,5vw,56px)">
+    <div style="max-width:1080px;margin:0 auto;text-align:center">
+      <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:#8a6d2f">Ils nous font confiance</span>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3.6vw,42px);color:#245613;margin:14px 0 48px">Des moments réussis</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;margin-bottom:48px">
+        <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="2">
+          <div style="background:#fff;border-radius:16px;padding:34px 30px;box-shadow:0 16px 40px rgba(0,0,0,.08);text-align:left">
+            <div style="color:#C9A55C;font-size:26px;font-family:'Playfair Display',serif;margin-bottom:12px">“</div>
+            <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:19px;color:#2A3B30;line-height:1.5;margin-bottom:20px">{{ t.q }}</p>
+            <span style="font-family:'Poppins',sans-serif;font-size:13px;color:#8a6d2f;font-weight:500">{{ t.a }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <button onClick="{{ toContact }}" style="padding:16px 36px;background:#245613;color:#F5F0E6;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;letter-spacing:.02em;cursor:pointer;transition:background .25s" style-hover="{background:'#163C0B'}">Demander un devis sous 48h</button>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<!-- ===================== PAGE : ENTREPRISES ===================== -->
+<sc-if value="{{ isEntreprises }}" hint-placeholder-val="{{ false }}">
+<div class="eoma-page">
+  <section style="background:linear-gradient(160deg,#163C0B,#245613);padding:clamp(56px,7vw,96px) clamp(20px,5vw,56px)">
+    <div style="max-width:1080px;margin:0 auto;text-align:center">
+      <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:#C9A55C">Traiteur Entreprise</span>
+      <h1 style="font-family:'Playfair Display',serif;font-weight:700;color:#C9A55C;font-size:clamp(34px,4.8vw,56px);margin:18px 0 18px;line-height:1.1">Recevoir &amp; régaler vos équipes</h1>
+      <p style="font-size:clamp(16px,1.6vw,19px);color:rgba(237,231,216,.85);max-width:620px;margin:0 auto">Déjeuners de travail, cocktails, séminaires : une cuisine faite maison, fraîche et écoresponsable, livrée et installée sur le lieu de votre événement.</p>
+    </div>
+  </section>
+
+  <!-- Déjeuners réunions -->
+  <section style="background:#F5F0E6;color:#2A3B30;padding:clamp(56px,7vw,100px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(36px,5vw,60px);align-items:center;margin-bottom:56px">
+        <div style="aspect-ratio:4/3;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.15)">
+          <image-slot id="ent-dej" style="width:100%;height:100%;display:block" radius="18" placeholder="Plateau chaud" src="https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=1000&q=75&auto=format&fit=crop"></image-slot>
+        </div>
+        <div>
+          <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:#8a6d2f">Déjeuners Réunions</span>
+          <h2 style="font-family:'Playfair Display',serif;font-size:clamp(26px,3.4vw,38px);color:#245613;margin:12px 0 16px;line-height:1.15">Des plateaux chauds et écoresponsables</h2>
+          <p style="font-size:16px;color:#4a5a4d;max-width:520px">Nos plats sont maintenus au chaud jusqu’à 6 heures dans des boîtes isothermes réutilisables : vos convives dégustent une cuisine à bonne température, sans logistique complexe de votre côté.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px">
+        <sc-for list="{{ formulesEnt }}" as="f" hint-placeholder-count="3">
+          <div style="background:#fff;border-radius:16px;padding:32px 28px;box-shadow:0 12px 32px rgba(0,0,0,.07);border-top:3px solid #C9A55C">
+            <h3 style="font-family:'Playfair Display',serif;font-size:24px;color:#245613;margin-bottom:12px">{{ f.title }}</h3>
+            <p style="font-size:14.5px;color:#4a5a4d">{{ f.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- Autres prestations pro -->
+  <section style="background:#163C0B;padding:clamp(56px,7vw,100px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px">
+        <sc-for list="{{ proServices }}" as="s" hint-placeholder-count="3">
+          <div style="background:#245613;border:1px solid rgba(201,165,92,.15);border-radius:16px;overflow:hidden">
+            <div style="aspect-ratio:16/10"><image-slot id="{{ s.slot }}" style="width:100%;height:100%;display:block" radius="0" placeholder="{{ s.ph }}" src="{{ s.img }}"></image-slot></div>
+            <div style="padding:26px 24px 30px">
+              <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:#C9A55C;margin-bottom:10px">{{ s.title }}</h3>
+              <p style="font-size:14.5px;color:rgba(237,231,216,.8)">{{ s.desc }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logistique -->
+  <section style="background:#F5F0E6;color:#2A3B30;padding:clamp(56px,7vw,90px) clamp(20px,5vw,56px)">
+    <div style="max-width:1080px;margin:0 auto;text-align:center">
+      <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:#8a6d2f">Logistique</span>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(26px,3.4vw,40px);color:#245613;margin:12px 0 30px">Une prestation clé en main</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px">
+        <div style="background:#fff;border-radius:14px;padding:26px"><h3 style="font-family:'Playfair Display',serif;font-size:19px;color:#8a6d2f;margin-bottom:8px">Livraison & déplacement</h3><p style="font-size:14px;color:#4a5a4d">Nous nous déplaçons pour votre événement, aux horaires qui vous conviennent.</p></div>
+        <div style="background:#fff;border-radius:14px;padding:26px"><h3 style="font-family:'Playfair Display',serif;font-size:19px;color:#8a6d2f;margin-bottom:8px">Installation soignée</h3><p style="font-size:14px;color:#4a5a4d">Dressage et mise en place élégante, prêts à recevoir vos invités.</p></div>
+        <div style="background:#fff;border-radius:14px;padding:26px"><h3 style="font-family:'Playfair Display',serif;font-size:19px;color:#8a6d2f;margin-bottom:8px">Maintien au chaud 6h</h3><p style="font-size:14px;color:#4a5a4d">Boîtes isothermes réutilisables pour une dégustation à température.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#245613;padding:clamp(56px,7vw,96px) clamp(20px,5vw,56px);text-align:center">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3.8vw,44px);color:#C9A55C;margin-bottom:14px;line-height:1.15">Un projet en tête ?</h2>
+      <p style="font-size:17px;color:rgba(237,231,216,.85);margin-bottom:32px">Décrivez-nous votre événement, la cheffe vous répond avec un devis personnalisé sous 48h.</p>
+      <button onClick="{{ toContact }}" style="padding:16px 38px;background:#C9A55C;color:#163C0B;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 28px rgba(201,165,92,.3);transition:transform .25s" style-hover="{transform:'translateY(-2px)'}">Demander un devis sous 48h</button>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<!-- ===================== PAGE : MARIAGES & RÉCEPTIONS ===================== -->
+<sc-if value="{{ isMariages }}" hint-placeholder-val="{{ false }}">
+<div class="eoma-page">
+  <section style="background:linear-gradient(160deg,#163C0B,#245613);padding:clamp(56px,7vw,96px) clamp(20px,5vw,56px)">
+    <div style="max-width:900px;margin:0 auto;text-align:center">
+      <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:#C9A55C">Mariages &amp; Réceptions</span>
+      <h1 style="font-family:'Playfair Display',serif;font-weight:700;color:#C9A55C;font-size:clamp(32px,4.6vw,54px);margin:18px 0 18px;line-height:1.12">Chaque événement mérite une table à sa hauteur</h1>
+      <p style="font-size:clamp(16px,1.6vw,19px);color:rgba(237,231,216,.85);max-width:640px;margin:0 auto">Écoute, sur-mesure et échange direct avec la cheffe. Une cuisine faite maison, fraîche et de saison, pour des réceptions à votre image — devis sous 48h.</p>
+    </div>
+  </section>
+
+  <!-- 3 univers -->
+  <section style="background:#F5F0E6;color:#2A3B30;padding:clamp(56px,7vw,100px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:48px">
+      <sc-for list="{{ univers }}" as="u" hint-placeholder-count="3">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(30px,4vw,56px);align-items:center">
+          <div style="aspect-ratio:5/4;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.15);order:{{ u.imgOrder }}">
+            <image-slot id="{{ u.slot }}" style="width:100%;height:100%;display:block" radius="18" placeholder="{{ u.ph }}" src="{{ u.img }}"></image-slot>
+          </div>
+          <div>
+            <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:#8a6d2f">{{ u.tag }}</span>
+            <h2 style="font-family:'Playfair Display',serif;font-size:clamp(26px,3.4vw,38px);color:#245613;margin:12px 0 14px">{{ u.title }}</h2>
+            <p style="font-size:16px;color:#4a5a4d;max-width:520px">{{ u.desc }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- Formules -->
+  <section style="background:#163C0B;padding:clamp(56px,7vw,100px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:48px">
+        <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:#C9A55C">Nos formules de réception</span>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3.6vw,44px);color:#EDE7D8;margin-top:12px">Trois manières de recevoir</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px">
+        <sc-for list="{{ formulesRec }}" as="f" hint-placeholder-count="3">
+          <div style="background:#245613;border:1px solid rgba(201,165,92,.15);border-radius:16px;overflow:hidden">
+            <div style="aspect-ratio:16/10"><image-slot id="{{ f.slot }}" style="width:100%;height:100%;display:block" radius="0" placeholder="{{ f.ph }}" src="{{ f.img }}"></image-slot></div>
+            <div style="padding:26px 24px 30px">
+              <h3 style="font-family:'Playfair Display',serif;font-size:23px;color:#C9A55C;margin-bottom:12px">{{ f.title }}</h3>
+              <p style="font-size:14.5px;color:rgba(237,231,216,.8)">{{ f.desc }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- Animations culinaires -->
+  <section style="background:#C9A55C;color:#163C0B;padding:clamp(40px,5vw,64px) clamp(20px,5vw,56px)">
+    <div style="max-width:1080px;margin:0 auto;text-align:center">
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3.2vw,36px);margin-bottom:10px">Animations culinaires en direct</h2>
+      <p style="font-family:'Poppins',sans-serif;font-size:16px;font-weight:500">Plancha · Foie gras poêlé · Bar à cocktails · et bien d’autres animations pour émerveiller vos invités.</p>
+    </div>
+  </section>
+
+  <!-- Flexibilité + galerie ambiance -->
+  <section style="background:#F5F0E6;color:#2A3B30;padding:clamp(56px,7vw,100px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="text-align:center;max-width:680px;margin:0 auto 48px">
+        <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:#8a6d2f">Flexibilité</span>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(26px,3.4vw,40px);color:#245613;margin:12px 0 12px">Une table pour tous vos convives</h2>
+        <p style="font-size:16px;color:#4a5a4d">Nous adaptons chaque menu aux intolérances et régimes : végétarien, sans gluten, vegan.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+        <div style="aspect-ratio:1;border-radius:12px;overflow:hidden"><image-slot id="mar-amb-1" style="width:100%;height:100%;display:block" radius="12" placeholder="Ambiance" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=75&auto=format&fit=crop"></image-slot></div>
+        <div style="aspect-ratio:1;border-radius:12px;overflow:hidden"><image-slot id="mar-amb-2" style="width:100%;height:100%;display:block" radius="12" placeholder="Ambiance" src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=700&q=75&auto=format&fit=crop"></image-slot></div>
+        <div style="aspect-ratio:1;border-radius:12px;overflow:hidden"><image-slot id="mar-amb-3" style="width:100%;height:100%;display:block" radius="12" placeholder="Ambiance" src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=700&q=75&auto=format&fit=crop"></image-slot></div>
+        <div style="aspect-ratio:1;border-radius:12px;overflow:hidden"><image-slot id="mar-amb-4" style="width:100%;height:100%;display:block" radius="12" placeholder="Ambiance" src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=700&q=75&auto=format&fit=crop"></image-slot></div>
+        <div style="aspect-ratio:1;border-radius:12px;overflow:hidden"><image-slot id="mar-amb-5" style="width:100%;height:100%;display:block" radius="12" placeholder="Ambiance" src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=700&q=75&auto=format&fit=crop"></image-slot></div>
+        <div style="aspect-ratio:1;border-radius:12px;overflow:hidden"><image-slot id="mar-amb-6" style="width:100%;height:100%;display:block" radius="12" placeholder="Ambiance" src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=700&q=75&auto=format&fit=crop"></image-slot></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#245613;padding:clamp(56px,7vw,96px) clamp(20px,5vw,56px);text-align:center">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3.8vw,44px);color:#C9A55C;margin-bottom:14px;line-height:1.15">Parlez de votre événement à notre cheffe</h2>
+      <p style="font-size:17px;color:rgba(237,231,216,.85);margin-bottom:32px">De la première idée au dernier dressage, nous composons une réception à votre image. Devis sous 48h.</p>
+      <button onClick="{{ toContact }}" style="padding:16px 38px;background:#C9A55C;color:#163C0B;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 28px rgba(201,165,92,.3);transition:transform .25s" style-hover="{transform:'translateY(-2px)'}">Demander un devis sous 48h</button>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<!-- ===================== PAGE : NOS ENGAGEMENTS ===================== -->
+<sc-if value="{{ isEngagements }}" hint-placeholder-val="{{ false }}">
+<div class="eoma-page">
+  <section style="background:#F5F0E6;color:#2A3B30;padding:clamp(60px,8vw,110px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="text-align:center;max-width:720px;margin:0 auto 60px">
+        <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:#8a6d2f">Notre philosophie</span>
+        <h1 style="font-family:'Playfair Display',serif;font-weight:700;color:#245613;font-size:clamp(34px,4.8vw,56px);margin:16px 0 18px">Nos Engagements</h1>
+        <p style="font-size:clamp(16px,1.6vw,19px);color:#4a5a4d">Une cuisine sincère, respectueuse du produit, des saisons et du terroir français.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px">
+        <sc-for list="{{ engagements }}" as="e" hint-placeholder-count="4">
+          <div style="background:#fff;border-radius:18px;padding:38px 32px;box-shadow:0 14px 38px rgba(0,0,0,.07);border-top:3px solid #C9A55C">
+            <span style="font-family:'Playfair Display',serif;font-size:15px;color:#C9A55C;letter-spacing:.04em">{{ e.num }}</span>
+            <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:#245613;margin:8px 0 14px">{{ e.title }}</h2>
+            <p style="font-size:15px;color:#4a5a4d">{{ e.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#245613;padding:clamp(40px,5vw,60px) clamp(20px,5vw,56px)">
+    <div style="max-width:900px;margin:0 auto;text-align:center">
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3.2vw,34px);color:#C9A55C;margin-bottom:12px">Une cuisine adaptée à chacun</h2>
+      <p style="font-size:16px;color:rgba(237,231,216,.85)">Végétarien · Sans gluten · Vegan — nous composons des menus qui respectent tous les régimes, sans compromis sur le goût.</p>
+    </div>
+  </section>
+
+  <section style="background:#245613;padding:clamp(56px,7vw,96px) clamp(20px,5vw,56px);text-align:center">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3.8vw,44px);color:#C9A55C;margin-bottom:14px;line-height:1.15">Recevez vos équipes comme il se doit</h2>
+      <p style="font-size:17px;color:rgba(237,231,216,.85);margin-bottom:32px">Décrivez-nous votre événement d’entreprise, la cheffe vous répond avec un devis personnalisé sous 48h.</p>
+      <button onClick="{{ toContact }}" style="padding:16px 38px;background:#C9A55C;color:#163C0B;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 28px rgba(201,165,92,.3);transition:transform .25s" style-hover="{transform:'translateY(-2px)'}">Demander un devis sous 48h</button>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<!-- ===================== PAGE : LA CHEFFE ===================== -->
+<sc-if value="{{ isCheffe }}" hint-placeholder-val="{{ false }}">
+<div class="eoma-page">
+  <section style="background:linear-gradient(160deg,#163C0B,#245613);padding:clamp(60px,8vw,110px) clamp(20px,5vw,56px)">
+    <div style="max-width:760px;margin:0 auto">
+      <div>
+        <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:#C9A55C">La cheffe exécutive</span>
+        <h1 style="font-family:'Playfair Display',serif;font-weight:700;color:#C9A55C;font-size:clamp(34px,4.6vw,54px);margin:16px 0 20px;line-height:1.1">Célia Leroy</h1>
+        <p style="font-size:17px;color:rgba(237,231,216,.88);margin-bottom:18px">Née d’une passion pour le fait maison, la cuisine de Célia célèbre le produit brut, cueilli au bon moment, travaillé avec exigence et générosité. Chaque plat raconte une saison, un producteur, une envie de partage.</p>
+        <p style="font-size:17px;color:rgba(237,231,216,.88);margin-bottom:18px">Attachée au fait maison et au travail des producteurs français, elle a bâti un réseau de partenaires de confiance pour cuisiner au plus près des saisons, en circuit court, dans une démarche écoresponsable assumée.</p>
+        <p style="font-size:17px;color:rgba(237,231,216,.88);margin-bottom:32px">Sa signature : une relation directe et sincère avec chaque client. De la première idée au dernier dressage, Célia vous accompagne personnellement pour créer une table à votre image.</p>
+        <button onClick="{{ toContact }}" style="padding:16px 34px;background:#C9A55C;color:#163C0B;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 28px rgba(201,165,92,.3);transition:transform .25s" style-hover="{transform:'translateY(-2px)'}">Discutez de votre projet avec la cheffe</button>
+      </div>
+    </div>
+  </section>
+  <section style="background:#F5F0E6;color:#2A3B30;padding:clamp(50px,6vw,80px) clamp(20px,5vw,56px)">
+    <div style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:22px;text-align:center">
+      <div><div style="font-family:'Playfair Display',serif;font-size:40px;color:#8a6d2f">100%</div><p style="font-size:14px;color:#4a5a4d;margin-top:6px">Fait maison</p></div>
+      <div><div style="font-family:'Playfair Display',serif;font-size:40px;color:#8a6d2f">48h</div><p style="font-size:14px;color:#4a5a4d;margin-top:6px">Devis personnalisé</p></div>
+      <div><div style="font-family:'Playfair Display',serif;font-size:40px;color:#8a6d2f">France</div><p style="font-size:14px;color:#4a5a4d;margin-top:6px">Producteurs partenaires</p></div>
+      <div><div style="font-family:'Playfair Display',serif;font-size:40px;color:#8a6d2f">Sur mesure</div><p style="font-size:14px;color:#4a5a4d;margin-top:6px">Chaque événement</p></div>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<!-- ===================== PAGE : GALERIE ===================== -->
+<sc-if value="{{ isGalerie }}" hint-placeholder-val="{{ false }}">
+<div class="eoma-page">
+  <section style="background:linear-gradient(160deg,#163C0B,#245613);padding:clamp(52px,6vw,84px) clamp(20px,5vw,56px)">
+    <div style="max-width:1080px;margin:0 auto;text-align:center">
+      <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:#C9A55C">En images</span>
+      <h1 style="font-family:'Playfair Display',serif;font-weight:700;color:#C9A55C;font-size:clamp(34px,4.6vw,54px);margin:16px 0 12px">La galerie</h1>
+      <p style="font-size:17px;color:rgba(237,231,216,.85);max-width:560px;margin:0 auto">Plats mijotés, buffets généreux, cocktails raffinés et grandes réceptions.</p>
+    </div>
+  </section>
+  <section style="background:#245613;padding:clamp(40px,5vw,72px) clamp(20px,5vw,56px)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:40px">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+          <button onClick="{{ f.onClick }}" style="{{ f.chipStyle }}">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <div style="columns:3 260px;column-gap:16px">
+        <sc-for list="{{ galleryView }}" as="g" hint-placeholder-count="12">
+          <div style="break-inside:avoid;margin-bottom:16px;border-radius:14px;overflow:hidden">
+            <image-slot id="{{ g.id }}" style="width:100%;height:{{ g.h }};display:block" radius="14" placeholder="{{ g.ph }}" src="{{ g.img }}"></image-slot>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<!-- ===================== PAGE : CONTACT / DEVIS ===================== -->
+<sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+<div class="eoma-page">
+  <section style="background:linear-gradient(160deg,#163C0B,#245613);padding:clamp(52px,6vw,84px) clamp(20px,5vw,56px)">
+    <div style="max-width:900px;margin:0 auto;text-align:center">
+      <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:#C9A55C">Contact &amp; devis</span>
+      <h1 style="font-family:'Playfair Display',serif;font-weight:700;color:#C9A55C;font-size:clamp(32px,4.4vw,52px);margin:16px 0 12px">Parlons de votre projet</h1>
+      <p style="font-size:17px;color:rgba(237,231,216,.85);max-width:600px;margin:0 auto">Décrivez-nous votre événement : la cheffe vous répond avec un devis personnalisé sous 48h.</p>
+    </div>
+  </section>
+
+  <section style="background:#F5F0E6;color:#2A3B30;padding:clamp(50px,6vw,90px) clamp(20px,5vw,56px)">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(36px,5vw,56px);align-items:start">
+      <!-- FORM -->
+      <div style="background:#fff;border-radius:20px;padding:clamp(28px,4vw,44px);box-shadow:0 20px 50px rgba(0,0,0,.1)">
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:40px 10px">
+            <div style="font-family:'Playfair Display',serif;font-size:30px;color:#8a6d2f;margin-bottom:12px">Merci !</div>
+            <p style="font-size:16px;color:#4a5a4d">Votre demande a bien été prise en compte. La cheffe vous répond avec un devis sous 48h.</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ onSubmit }}" style="display:flex;flex-direction:column;gap:18px">
+          <label style="display:flex;flex-direction:column;gap:7px;font-family:'Poppins',sans-serif;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:#8a6d2f;font-weight:500">Type de projet
+            <select required="" style="padding:13px 14px;border:1px solid #d8d0bd;border-radius:10px;font-family:'Poppins',sans-serif;font-size:15px;color:#2A3B30;background:#fbf9f3;text-transform:none;letter-spacing:0">
+              <option value="">Choisir…</option>
+              <option>Entreprise</option><option>Mariage</option><option>Baptême</option><option>Anniversaire</option><option>Autre</option>
+            </select>
+          </label>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px">
+            <label style="display:flex;flex-direction:column;gap:7px;font-family:'Poppins',sans-serif;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:#8a6d2f;font-weight:500">Nom
+              <input required="" type="text" placeholder="Votre nom" style="padding:13px 14px;border:1px solid #d8d0bd;border-radius:10px;font-family:'Poppins',sans-serif;font-size:15px;color:#2A3B30;background:#fbf9f3;text-transform:none;letter-spacing:0"></label>
+            <label style="display:flex;flex-direction:column;gap:7px;font-family:'Poppins',sans-serif;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:#8a6d2f;font-weight:500">Email
+              <input required="" type="email" placeholder="vous@email.fr" style="padding:13px 14px;border:1px solid #d8d0bd;border-radius:10px;font-family:'Poppins',sans-serif;font-size:15px;color:#2A3B30;background:#fbf9f3;text-transform:none;letter-spacing:0"></label>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px">
+            <label style="display:flex;flex-direction:column;gap:7px;font-family:'Poppins',sans-serif;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:#8a6d2f;font-weight:500">Téléphone
+              <input type="tel" placeholder="07 67 60 31 51" style="padding:13px 14px;border:1px solid #d8d0bd;border-radius:10px;font-family:'Poppins',sans-serif;font-size:15px;color:#2A3B30;background:#fbf9f3;text-transform:none;letter-spacing:0"></label>
+            <label style="display:flex;flex-direction:column;gap:7px;font-family:'Poppins',sans-serif;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:#8a6d2f;font-weight:500">Date
+              <input type="date" style="padding:13px 14px;border:1px solid #d8d0bd;border-radius:10px;font-family:'Poppins',sans-serif;font-size:15px;color:#2A3B30;background:#fbf9f3;text-transform:none;letter-spacing:0"></label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:7px;font-family:'Poppins',sans-serif;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:#8a6d2f;font-weight:500">Nombre de convives
+            <input type="number" min="1" placeholder="ex. 40" style="padding:13px 14px;border:1px solid #d8d0bd;border-radius:10px;font-family:'Poppins',sans-serif;font-size:15px;color:#2A3B30;background:#fbf9f3;text-transform:none;letter-spacing:0"></label>
+          <label style="display:flex;flex-direction:column;gap:7px;font-family:'Poppins',sans-serif;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:#8a6d2f;font-weight:500">Message
+            <textarea rows="4" placeholder="Parlez-nous de votre événement…" style="padding:13px 14px;border:1px solid #d8d0bd;border-radius:10px;font-family:'Poppins',sans-serif;font-size:15px;color:#2A3B30;background:#fbf9f3;resize:vertical;text-transform:none;letter-spacing:0"></textarea></label>
+          <button type="submit" style="margin-top:6px;padding:16px;background:#C9A55C;color:#163C0B;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 28px rgba(201,165,92,.3);transition:transform .25s" style-hover="{transform:'translateY(-2px)'}">Recevoir mon devis sous 48h</button>
+        </form>
+        </sc-if>
+      </div>
+
+      <!-- COORDONNÉES -->
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div style="background:#245613;color:#EDE7D8;border-radius:18px;padding:34px 30px">
+          <h2 style="font-family:'Playfair Display',serif;font-size:24px;color:#C9A55C;margin-bottom:20px">Nous joindre</h2>
+          <div style="display:flex;flex-direction:column;gap:16px;font-size:15px">
+            <div><div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#C9A55C;margin-bottom:3px">Email</div>eomatraiteur@gmail.com</div>
+            <div><div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#C9A55C;margin-bottom:3px">Téléphone</div>07 67 60 31 51</div>
+            <div><div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#C9A55C;margin-bottom:3px">Adresse</div>Ris-Orangis (91)</div>
+            <div><div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#C9A55C;margin-bottom:3px">Zones desservies</div>Partout en France</div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:24px">
+            <a href="https://facebook.com" target="_blank" style="flex:1;text-align:center;padding:11px;background:rgba(201,165,92,.16);border:1px solid rgba(201,165,92,.3);border-radius:10px;font-size:13px;color:#C9A55C;text-decoration:none">Facebook</a>
+            <a href="https://maps.google.com/?q=Ris-Orangis" target="_blank" style="flex:1;text-align:center;padding:11px;background:rgba(201,165,92,.16);border:1px solid rgba(201,165,92,.3);border-radius:10px;font-size:13px;color:#C9A55C;text-decoration:none">Google Maps</a>
+          </div>
+        </div>
+        <div style="background:#C9A55C;color:#163C0B;border-radius:18px;padding:28px 30px">
+          <div style="font-family:'Playfair Display',serif;font-size:21px;margin-bottom:6px">Réponse sous 48h</div>
+          <p style="font-size:14px;font-weight:400">Chaque demande reçoit un devis personnalisé, établi par la cheffe elle-même.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ils nous ont fait confiance -->
+    <div style="max-width:1200px;margin:64px auto 0;text-align:center">
+      <span style="font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:#8a6d2f">Ils nous ont fait confiance</span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:18px;margin-top:26px">
+        <div style="aspect-ratio:3/1;border-radius:10px;overflow:hidden;background:#fff"><image-slot id="logo-1" style="width:100%;height:100%;display:block" fit="contain" radius="10" placeholder="Logo client"></image-slot></div>
+        <div style="aspect-ratio:3/1;border-radius:10px;overflow:hidden;background:#fff"><image-slot id="logo-2" style="width:100%;height:100%;display:block" fit="contain" radius="10" placeholder="Logo client"></image-slot></div>
+        <div style="aspect-ratio:3/1;border-radius:10px;overflow:hidden;background:#fff"><image-slot id="logo-3" style="width:100%;height:100%;display:block" fit="contain" radius="10" placeholder="Logo client"></image-slot></div>
+        <div style="aspect-ratio:3/1;border-radius:10px;overflow:hidden;background:#fff"><image-slot id="logo-4" style="width:100%;height:100%;display:block" fit="contain" radius="10" placeholder="Logo client"></image-slot></div>
+      </div>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+</main>
+
+<!-- ===================== FOOTER (partagé) ===================== -->
+<footer style="background:#163C0B;border-top:1px solid rgba(201,165,92,.18);padding:clamp(48px,6vw,80px) clamp(20px,5vw,56px) 36px">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px">
+    <div>
+      <img src="logo-eoma-light.png" alt="ÉOMA Traiteur" style="height:66px;width:auto;display:block;margin-bottom:18px">
+      <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:16px;color:rgba(237,231,216,.8);max-width:240px">« L’Art de créer du Bonheur à travers la Nourriture »</p>
+    </div>
+    <div>
+      <h4 style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#C9A55C;margin-bottom:16px">Navigation</h4>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ nav }}" as="item" hint-placeholder-count="6">
+          <a onClick="{{ item.onClick }}" style="font-size:14px;color:rgba(237,231,216,.8);cursor:pointer;text-decoration:none">{{ item.label }}</a>
+        </sc-for>
+        <a onClick="{{ toGalerie }}" style="font-size:14px;color:rgba(237,231,216,.8);cursor:pointer;text-decoration:none">Galerie</a>
+      </div>
+    </div>
+    <div>
+      <h4 style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#C9A55C;margin-bottom:16px">Contact</h4>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:rgba(237,231,216,.8)">
+        <span>eomatraiteur@gmail.com</span>
+        <span>07 67 60 31 51</span>
+        <span>Ris-Orangis (91)</span>
+      </div>
+    </div>
+    <div>
+      <h4 style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#C9A55C;margin-bottom:16px">Zones desservies</h4>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:rgba(237,231,216,.8)">
+        <span>Partout en France</span><span>Déplacements sur demande</span>
+      </div>
+      <div style="display:flex;gap:14px;margin-top:16px">
+        <a href="https://facebook.com" target="_blank" style="font-size:13px;color:#C9A55C;text-decoration:none">Facebook</a>
+        <a href="https://instagram.com" target="_blank" style="font-size:13px;color:#C9A55C;text-decoration:none">Instagram</a>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1280px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(237,231,216,.12);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12px;color:rgba(237,231,216,.55)">
+    <span>© 2026 EOMA Traiteur d’Exception — Tous droits réservés</span>
+    <span>Mentions légales · Politique de confidentialité</span>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { page: 'accueil', menuOpen: false, filter: 'tous', sent: false };
+
+  go(page) {
+    this.setState({ page, menuOpen: false, sent: false });
+    if (typeof window !== 'undefined') window.scrollTo(0, 0);
+  }
+
+  renderVals() {
+    const page = this.state.page;
+    const img = (id, w) => `https://images.unsplash.com/photo-${id}?w=${w || 1000}&q=75&auto=format&fit=crop`;
+
+    const baseLink = {
+      cursor: 'pointer', fontFamily: "'Poppins',sans-serif", fontSize: '14px',
+      letterSpacing: '.02em', textDecoration: 'none', paddingBottom: '4px',
+      transition: 'color .25s,border-color .25s', whiteSpace: 'nowrap'
+    };
+    const nav = [
+      { key: 'accueil', label: 'Accueil' },
+      { key: 'entreprises', label: 'Entreprises' },
+      { key: 'mariages', label: 'Mariages & Réceptions' },
+      { key: 'engagements', label: 'Nos engagements' },
+      { key: 'cheffe', label: 'La cheffe' },
+      { key: 'contact', label: 'Contact' },
+    ].map(n => ({
+      ...n,
+      onClick: () => this.go(n.key),
+      linkStyle: {
+        ...baseLink,
+        color: page === n.key ? '#C9A55C' : 'rgba(237,231,216,.85)',
+        borderBottom: page === n.key ? '2px solid #C9A55C' : '2px solid transparent',
+      },
+      mLinkStyle: {
+        cursor: 'pointer', fontFamily: "'Poppins',sans-serif", fontSize: '16px',
+        textDecoration: 'none', padding: '12px 4px', borderBottom: '1px solid rgba(237,231,216,.1)',
+        color: page === n.key ? '#C9A55C' : 'rgba(237,231,216,.9)',
+      },
+    }));
+
+    const reassurance = [
+      '100% fait maison', 'Produits frais & de saison', 'Circuit court France', 'Devis sous 48h'
+    ];
+
+    const prestations = [
+      { slot: 'home-p-dej', img: img('1467003909585-2f8a72700288'), title: 'Déjeuners Réunions', ph: 'Plateau chaud', desc: 'Plateaux chauds maintenus au chaud jusqu’à 6h en boîtes isothermes.', onClick: () => this.go('entreprises') },
+      { slot: 'home-p-buf', img: 'photos/buffet-1.png', title: 'Buffets', ph: 'Buffet généreux', desc: 'Buffets froids et chauds, générosité et fraîcheur assurées.', onClick: () => this.go('mariages') },
+      { slot: 'home-p-coc', img: 'photos/cocktail-1.png', title: 'Cocktail Apéritif', ph: 'Pièces cocktail', desc: 'Pièces salées chic et sucrées délicates, fabrication artisanale.', onClick: () => this.go('mariages') },
+      { slot: 'home-p-sur', img: img('1504674900247-0877df9cc836'), title: 'Sur Mesure', ph: 'Dressage fin', desc: 'Une prestation pensée pour votre événement, de A à Z.', onClick: () => this.go('contact') },
+    ];
+
+    const testimonials = [
+      { q: 'Une prestation d’exception pour notre séminaire. Tout était frais, généreux et servi avec le sourire.', a: 'Marlène D. — Directrice RH' },
+      { q: 'Célia a sublimé notre mariage. Les animations culinaires ont enchanté tous nos invités.', a: 'Julie & Thomas' },
+    ];
+
+    const formulesEnt = [
+      { title: 'Formule Pressée', desc: 'Un plat complet et savoureux, pensé pour les déjeuners rapides sans rien sacrifier à la qualité ni au fait maison.' },
+      { title: 'Formule Gourmande', desc: 'Entrée, plat et douceur : une pause déjeuner généreuse et équilibrée, servie avec soin pour vos réunions.' },
+      { title: 'Formule Sur Mesure', desc: 'Un menu composé avec vous, adapté à vos convives, vos régimes et l’esprit de votre événement.' },
+    ];
+
+    const proServices = [
+      { slot: 'ent-coc', img: 'photos/cocktail-2.png', title: 'Cocktail Apéritif d’entreprise', ph: 'Cocktail chic', desc: 'Pièces salées chic et sucrées délicates, fabrication artisanale, pour vos afterworks et lancements.' },
+      { slot: 'ent-pdj', img: 'photos/petit-dej.png', title: 'Petits-déjeuners & pauses', ph: 'Café d’accueil', desc: 'Cafés d’accueil, goûters et pauses gourmandes pour rythmer vos journées de travail.' },
+      { slot: 'ent-sem', img: img('1414235077428-338989a2e8c0'), title: 'Séminaires & réceptions pro', ph: 'Réception pro', desc: 'De la journée d’étude à la soirée de gala, une restauration soignée du matin au soir.' },
+    ];
+
+    const univers = [
+      { tag: 'Mariages', slot: 'mar-u-1', img: 'photos/mariage-2.png', ph: 'Réception de mariage', imgOrder: 0, title: 'Mariages', desc: 'Réceptions d’exception, buffets et cocktails raffinés, animations culinaires (plancha, foie gras poêlé, bar à cocktails). Service et installation soignés pour un grand jour sans fausse note.' },
+      { tag: 'Baptêmes', slot: 'mar-u-2', img: img('1565958011703-44f9829ba187'), ph: 'Buffet de baptême', imgOrder: 1, title: 'Baptêmes', desc: 'Une ambiance douce et conviviale, des buffets généreux et des pièces cocktails sucrées délicates — tartelettes, choux, macarons, mini-madeleines — dans des formules adaptées aux repas en famille.' },
+      { tag: 'Anniversaires', slot: 'mar-u-3', img: 'photos/cake-anniversaire.png', ph: 'Table anniversaire', imgOrder: 0, title: 'Anniversaires', desc: 'Du dîner intime à la grande fête : buffets froids ou chauds, cocktails dînatoires, gâteaux et douceurs, dans des formats flexibles selon le nombre de convives.' },
+    ];
+
+    const formulesRec = [
+      { slot: 'rec-froid', img: 'photos/buffet-1.png', title: 'Buffet Froid', ph: 'Buffet froid', desc: 'Une formule fraîcheur et équilibrée, généreuse : viandes origine France, sélection de fromages affinés et pain de campagne. Installation offerte.' },
+      { slot: 'rec-chaud', img: 'photos/buffet-2.png', title: 'Buffet Chaud', ph: 'Buffet chaud', desc: 'Un banquet de plats mijotés maintenus au chaud par système professionnel, garnitures au choix, option saumon rôti à la crème, assortiment d’entrées et charcuteries. Cuisiniers disponibles sur demande.' },
+      { slot: 'rec-coc', img: 'photos/cocktail-3.png', title: 'Cocktail Apéritif', ph: 'Cocktail dînatoire', desc: 'Pièces salées chic — toasts, navettes, wraps, mini-burgers, verrines — et sucrées délicates, en fabrication artisanale, pour une réception sur mesure.' },
+    ];
+
+    const engagements = [
+      { num: '01', title: 'Cuisine Responsable', desc: '100% frais et de saison. Nous cuisinons au rythme de la nature, en privilégiant des produits qui ont du goût et du sens.' },
+      { num: '02', title: 'Démarche de Proximité', desc: 'Nous travaillons en circuits courts avec des producteurs français sélectionnés, pour une cuisine qui a du sens et du goût.' },
+      { num: '03', title: 'Passion & Créativité', desc: 'Des saveurs naturelles sublimées par le geste artisanal, la curiosité et l’envie constante de surprendre vos convives.' },
+      { num: '04', title: 'Impact Positif', desc: 'Respect de la biodiversité, plateaux en bambou biodégradable et boîtes isothermes réutilisables : une gourmandise sans gaspillage.' },
+    ];
+
+    const galleryAll = [
+      { id: 'gal-1', cat: 'buffets', img: 'photos/buffet-1.png', ph: 'Buffet', h: '320px' },
+      { id: 'gal-2', cat: 'cocktails', img: 'photos/cocktail-1.png', ph: 'Cocktail', h: '220px' },
+      { id: 'gal-3', cat: 'mariages', img: 'photos/mariage-1.png', ph: 'Mariage', h: '280px' },
+      { id: 'gal-4', cat: 'entreprise', img: img('1467003909585-2f8a72700288'), ph: 'Déjeuner pro', h: '240px' },
+      { id: 'gal-5', cat: 'buffets', img: 'photos/buffet-2.png', ph: 'Buffet chaud', h: '300px' },
+      { id: 'gal-6', cat: 'cocktails', img: 'photos/cocktail-3.png', ph: 'Pièces sucrées', h: '260px' },
+      { id: 'gal-7', cat: 'mariages', img: 'photos/mariage-2.png', ph: 'Réception', h: '320px' },
+      { id: 'gal-8', cat: 'entreprise', img: img('1533089860892-a7c6f0a88666'), ph: 'Séminaire', h: '220px' },
+      { id: 'gal-9', cat: 'buffets', img: 'photos/buffet-1.png', ph: 'Fromages affinés', h: '280px' },
+      { id: 'gal-10', cat: 'cocktails', img: 'photos/cocktail-2.png', ph: 'Verrines', h: '240px' },
+      { id: 'gal-11', cat: 'mariages', img: 'photos/mariage-1.png', ph: 'Animation plancha', h: '300px' },
+      { id: 'gal-12', cat: 'entreprise', img: img('1540189549336-e6e99c3679fe'), ph: 'Pause gourmande', h: '260px' },
+    ];
+    const galleryView = galleryAll.filter(g => this.state.filter === 'tous' || g.cat === this.state.filter);
+
+    const chipBase = {
+      cursor: 'pointer', fontFamily: "'Poppins',sans-serif", fontSize: '13px',
+      padding: '10px 22px', borderRadius: '999px', transition: 'all .25s', letterSpacing: '.02em'
+    };
+    const filters = [
+      { key: 'tous', label: 'Tous' },
+      { key: 'entreprise', label: 'Entreprise' },
+      { key: 'buffets', label: 'Buffets' },
+      { key: 'cocktails', label: 'Cocktails' },
+      { key: 'mariages', label: 'Mariages & Réceptions' },
+    ].map(f => ({
+      ...f,
+      onClick: () => this.setState({ filter: f.key }),
+      chipStyle: this.state.filter === f.key
+        ? { ...chipBase, background: '#C9A55C', color: '#163C0B', border: '1.5px solid #C9A55C' }
+        : { ...chipBase, background: 'transparent', color: 'rgba(237,231,216,.8)', border: '1.5px solid rgba(201,165,92,.4)' },
+    }));
+
+    return {
+      nav, reassurance, prestations, testimonials, formulesEnt, proServices,
+      univers, formulesRec, engagements, galleryView, filters,
+      menuOpen: this.state.menuOpen,
+      sent: this.state.sent, notSent: !this.state.sent,
+      isAccueil: page === 'accueil', isEntreprises: page === 'entreprises',
+      isMariages: page === 'mariages', isEngagements: page === 'engagements',
+      isCheffe: page === 'cheffe', isGalerie: page === 'galerie', isContact: page === 'contact',
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      toAccueil: () => this.go('accueil'), toEntreprises: () => this.go('entreprises'),
+      toMariages: () => this.go('mariages'), toEngagements: () => this.go('engagements'),
+      toCheffe: () => this.go('cheffe'), toGalerie: () => this.go('galerie'),
+      toContact: () => this.go('contact'),
+      onSubmit: (e) => { e.preventDefault(); this.setState({ sent: true }); window.scrollTo(0, 0); },
+    };
+  }
+}
+</script>
+</body>
+</html>

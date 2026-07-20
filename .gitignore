@@ -1,3 +1,7 @@
 node_modules/
 package.json
 package-lock.json
+
+# fichiers de travail optimisation (ne pas déployer)
+_work/
+index.BACKUP-*.html

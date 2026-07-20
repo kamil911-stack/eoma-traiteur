@@ -230,7 +230,13 @@
     '  font:10px/1.2 system-ui,-apple-system,sans-serif;text-decoration:none;' +
     '  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;backdrop-filter:blur(6px)}' +
     '.credit[href]:hover{background:rgba(0,0,0,.8);text-decoration:underline}' +
-    ':host([data-filled][data-credit]) .credit{display:block}';
+    ':host([data-filled][data-credit]) .credit{display:block}' +
+    // En production (hors éditeur : pas de data-editable) le slot n'est qu'un
+    // affichage d'image. On rétablit le tactile natif — sinon touch-action:none
+    // bloque le scroll/tap sur mobile — et on laisse les taps traverser vers un
+    // éventuel conteneur cliquable parent (cartes prestations/galerie).
+    ':host(:not([data-editable])){pointer-events:none;touch-action:auto}' +
+    ':host(:not([data-editable])) .frame img{touch-action:auto}';
 
   const icon =
     '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +

@@ -5,3 +5,11 @@ package-lock.json
 # fichiers de travail optimisation (ne pas déployer)
 _work/
 index.BACKUP-*.html
+
+# outils de generation des pages statiques (non deployes)
+_build-pages.js
+_shared-style.txt
+_shot*.png
+_test*.js
+_serve.js
+caterer.json

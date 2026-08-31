@@ -3,6 +3,12 @@
   "name": "eoma-traiteur",
   "compatibility_date": "2026-07-08",
   "assets": {
-    "directory": "."
+    "directory": ".",
+    // Sert la page correspondante sans rediriger : /contact renvoie
+    // contact.html en 200 et l'URL reste /contact (au lieu d'un 307 vers /).
+    // "none" pour not_found_handling : une URL reellement inconnue doit
+    // rendre un 404, pas un faux 200 (soft 404 penalise par Google).
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
   }
 }

@@ -4,11 +4,12 @@
   "compatibility_date": "2026-07-08",
   "assets": {
     "directory": ".",
-    // Sert la page correspondante sans rediriger : /contact renvoie
-    // contact.html en 200 et l'URL reste /contact (au lieu d'un 307 vers /).
-    // "none" pour not_found_handling : une URL reellement inconnue doit
-    // rendre un 404, pas un faux 200 (soft 404 penalise par Google).
+    // /mentions-legales sert mentions-legales.html sans rediriger.
     "html_handling": "auto-trailing-slash",
-    "not_found_handling": "none"
+    // Les routes du routeur interne du bundle (/entreprises, /mariages,
+    // /engagements, /la-cheffe, /galerie, /contact) n'ont pas de fichier
+    // dedie : on renvoie index.html pour que la SPA affiche la bonne vue.
+    // Sans ca, un rafraichissement sur ces URLs renvoyait vers l'accueil.
+    "not_found_handling": "single-page-application"
   }
 }

@@ -10,10 +10,55 @@
 //   3. Cache : le HTML doit rester revalide, mais /assets/ est immuable
 //      (nom de fichier = UUID) et peut etre mis en cache un an.
 
-const ROUTES = new Set([
-  '/', '/entreprises', '/mariages', '/engagements',
-  '/la-cheffe', '/galerie', '/contact',
-]);
+// Metadonnees par vue. Le script SEO du bundle fait le meme travail apres
+// rendu, mais uniquement pour les clients qui executent JS : sans ca les 7
+// URLs partagent le title et le canonical de l'accueil dans le HTML servi.
+const PAGES = {
+  '/': {
+    title: "ÉOMA Traiteur d'Exception — Traiteur événementiel, mariage & entreprise en France",
+    description: "Traiteur événementiel haut de gamme pour mariages, réceptions et événements d'entreprise. Cuisine 100% faite maison, fraîche et de saison, circuit court. Devis sous 48h.",
+    ogTitle: "ÉOMA Traiteur d'Exception — Traiteur événementiel, mariage & entreprise",
+    ogDesc: "Cuisine 100% faite maison pour mariages, réceptions et événements d'entreprise. Devis sous 48h.",
+  },
+  '/entreprises': {
+    title: "Traiteur entreprise Essonne (91) — ÉOMA Traiteur d'Exception",
+    description: "Déjeuners de réunion, plateaux chauds, cocktails d'affaires et petits-déjeuners pour entreprises en Essonne et Île-de-France. Cuisine faite maison, devis sous 48h.",
+    ogTitle: "Traiteur entreprise en Essonne (91) — ÉOMA Traiteur d'Exception",
+    ogDesc: "Déjeuners de réunion, plateaux chauds et cocktails d'affaires pour vos équipes. Cuisine faite maison, devis sous 48h.",
+  },
+  '/mariages': {
+    title: "Traiteur mariage Essonne (91) — Buffets & cocktails | ÉOMA",
+    description: "Traiteur mariage et réception en Essonne et Île-de-France : buffets froids et chauds, cocktails et animations culinaires. Cuisine faite maison, devis sous 48h.",
+    ogTitle: "Traiteur mariage en Essonne (91) — Buffets & cocktails | ÉOMA",
+    ogDesc: "Buffets, cocktails et animations culinaires pour votre mariage en Île-de-France. Cuisine faite maison, devis sous 48h.",
+  },
+  '/engagements': {
+    title: "Nos engagements — Traiteur écoresponsable en Essonne | ÉOMA",
+    description: "Cuisine 100% faite maison, produits frais et de saison, circuit court avec des producteurs français et zéro plastique. La démarche d'ÉOMA Traiteur.",
+    ogTitle: "Nos engagements — Traiteur écoresponsable en Essonne | ÉOMA",
+    ogDesc: "Cuisine 100% faite maison, produits frais et de saison, circuit court avec des producteurs français, zéro plastique.",
+  },
+  '/la-cheffe': {
+    title: "Célia Leroy, cheffe et gérante — ÉOMA Traiteur d'Exception",
+    description: "Célia Leroy dirige ÉOMA Traiteur depuis Ris-Orangis. Elle prend vos appels, construit vos menus et signe vos devis, sans intermédiaire.",
+    ogTitle: "Célia Leroy, cheffe et gérante — ÉOMA Traiteur d'Exception",
+    ogDesc: "La cheffe prend vos appels, construit vos menus et signe vos devis, sans intermédiaire.",
+  },
+  '/galerie': {
+    title: "Galerie — Buffets, cocktails et réceptions | ÉOMA Traiteur",
+    description: "Découvrez en images les buffets, cocktails et réceptions réalisés par ÉOMA Traiteur d'Exception en Essonne et en Île-de-France.",
+    ogTitle: "Galerie — Buffets, cocktails et réceptions | ÉOMA Traiteur",
+    ogDesc: "Les buffets, cocktails et réceptions réalisés par ÉOMA Traiteur en Essonne et en Île-de-France.",
+  },
+  '/contact': {
+    title: "Contact & devis sous 48h — ÉOMA Traiteur, Ris-Orangis (91)",
+    description: "Contactez ÉOMA Traiteur à Ris-Orangis (91) : 07 67 60 31 51. Devis personnalisé sous 48h pour vos mariages, réceptions et événements d'entreprise.",
+    ogTitle: "Contact & devis sous 48h — ÉOMA Traiteur, Ris-Orangis (91)",
+    ogDesc: "Contactez ÉOMA Traiteur : 07 67 60 31 51. Devis personnalisé sous 48h pour vos événements.",
+  },
+};
+
+const ROUTES = new Set(Object.keys(PAGES));
 
 const PAGE_404 = `<!doctype html>
 <html lang="fr"><head>
@@ -88,13 +133,42 @@ export default {
     // cote client ne les aide pas : on retire ici les sections des autres vues.
     if (!isAsset && res.headers.get('content-type')?.includes('text/html')) {
       const view = path.replace(/\/+$/, '') || '/';
-      out = new HTMLRewriter()
+      const page = PAGES[view];
+      const canonical = 'https://eomatraiteur.fr' + (view === '/' ? '/' : view);
+
+      let rw = new HTMLRewriter()
         .on('#__prerender_seo section[data-prerender-path]', {
           element(el) {
             if (el.getAttribute('data-prerender-path') !== view) el.remove();
           },
-        })
-        .transform(out);
+        });
+
+      // Title, description, canonical et Open Graph propres a la vue, poses
+      // dans le HTML servi. Le script du bundle refait le meme travail apres
+      // rendu ; ici c'est pour les clients qui n'executent pas JS.
+      if (page) {
+        rw = rw
+          .on('title', {
+            element(el) { el.setInnerContent(page.title); },
+          })
+          .on('meta[name="description"]', {
+            element(el) { el.setAttribute('content', page.description); },
+          })
+          .on('link[rel="canonical"]', {
+            element(el) { el.setAttribute('href', canonical); },
+          })
+          .on('meta[property="og:title"]', {
+            element(el) { el.setAttribute('content', page.ogTitle); },
+          })
+          .on('meta[property="og:description"]', {
+            element(el) { el.setAttribute('content', page.ogDesc); },
+          })
+          .on('meta[property="og:url"]', {
+            element(el) { el.setAttribute('content', canonical); },
+          });
+      }
+
+      out = rw.transform(out);
     }
 
     // 3. Le domaine de preview *.workers.dev ne doit pas etre indexe

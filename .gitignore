@@ -14,3 +14,7 @@ _test*.js
 _serve.js
 caterer.json
 _orig/
+
+# etat local de wrangler dev
+.wrangler/
+_final.js

@@ -645,6 +645,17 @@
       // Toggle via style.display — the [hidden] attribute alone loses to
       // the display:flex / display:block rules in the stylesheet above.
       if (url) {
+        // Propage loading/fetchpriority/decoding de <image-slot> vers le <img>
+        // interne : sur l'element custom ces attributs n'ont aucun effet.
+        // Hors du if ci-dessous : au premier rendu src est deja defini, donc le
+        // bloc conditionnel ne s'executait pas et les images des vues non
+        // affichees etaient toutes telechargees d'emblee.
+        const lazy = this.getAttribute('loading');
+        if (lazy) { this._img.setAttribute('loading', lazy); this._ghost.setAttribute('loading', lazy); }
+        const prio = this.getAttribute('fetchpriority');
+        if (prio) this._img.setAttribute('fetchpriority', prio);
+        const dec = this.getAttribute('decoding');
+        if (dec) this._img.setAttribute('decoding', dec);
         if (this._img.getAttribute('src') !== url) {
           this._img.src = url;
           this._ghost.src = url;

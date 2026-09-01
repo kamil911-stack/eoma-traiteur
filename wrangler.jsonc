@@ -2,14 +2,22 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "eoma-traiteur",
   "compatibility_date": "2026-07-08",
+  // worker.js gere ce que la configuration d'assets seule ne peut pas faire :
+  // redirection 301 www -> apex, vrai 404 sur les URLs inconnues (au lieu du
+  // soft 404 renvoye par le mode single-page-application), noindex sur le
+  // domaine *.workers.dev et cache long sur /assets/.
+  "main": "worker.js",
   "assets": {
     "directory": ".",
+    // Expose env.ASSETS au Worker pour qu'il serve les fichiers lui-meme.
+    "binding": "ASSETS",
     // /mentions-legales sert mentions-legales.html sans rediriger.
     "html_handling": "auto-trailing-slash",
-    // Les routes du routeur interne du bundle (/entreprises, /mariages,
-    // /engagements, /la-cheffe, /galerie, /contact) n'ont pas de fichier
-    // dedie : on renvoie index.html pour que la SPA affiche la bonne vue.
-    // Sans ca, un rafraichissement sur ces URLs renvoyait vers l'accueil.
-    "not_found_handling": "single-page-application"
+    // Le Worker decide seul du 404 : on ne veut pas que la couche assets
+    // renvoie l'accueil pour une URL inconnue (c'etait la cause du soft 404).
+    "not_found_handling": "none",
+    // Les requetes passent d'abord par le Worker, y compris quand un fichier
+    // existe, pour qu'il puisse poser ses en-tetes.
+    "run_worker_first": true
   }
 }

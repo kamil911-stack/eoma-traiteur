@@ -137,12 +137,14 @@ export default {
       });
     }
 
-    // Les pages statiques servent leur propre fichier ; les routes SPA n'ont
-    // pas de fichier dedie, on leur sert index.html.
+    // Les pages statiques ont un vrai fichier : avec html_handling
+    // auto-trailing-slash, la couche assets sert /mentions-legales depuis
+    // mentions-legales.html en 200. Il faut donc lui passer la requete telle
+    // quelle. Lui demander le .html renverrait un 307 vers /mentions-legales,
+    // soit la boucle de redirection infinie corrigee ici.
+    // Les routes SPA, elles, n'ont pas de fichier dedie : on sert index.html.
     let assetReq = request;
-    if (STATIC_PAGES[view]) {
-      assetReq = new Request(new URL(STATIC_PAGES[view], url).toString(), request);
-    } else if (!isAsset && path !== '/') {
+    if (!STATIC_PAGES[view] && !isAsset && path !== '/') {
       assetReq = new Request(new URL('/', url).toString(), request);
     }
 

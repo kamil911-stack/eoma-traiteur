@@ -204,7 +204,7 @@ export default {
     // nom est stable : cache long sans immutable, pour rester remplacables.
     if (path.startsWith('/assets/')) {
       out.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
-    } else if (/^\/(photos|uploads)\//.test(path) || /^\/logo-eoma(-light)?\.png$/.test(path) || path === '/favicon.ico') {
+    } else if (/^\/(photos|uploads)\//.test(path) || /^\/logo-eoma(-light)?\.png$/.test(path) || path === '/favicon.ico' || path === '/og-image.jpg') {
       out.headers.set('Cache-Control', 'public, max-age=2592000');
     } else if (!isAsset) {
       out.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');

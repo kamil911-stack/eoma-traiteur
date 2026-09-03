@@ -60,6 +60,15 @@ const PAGES = {
 
 const ROUTES = new Set(Object.keys(PAGES));
 
+// Pages statiques classiques, hors SPA. Elles ont un vrai fichier .html, mais
+// html_handling: auto-trailing-slash redirige /x.html vers /x : sans cette
+// table, /x ne figurait pas dans ROUTES et repartait en 404. Les deux liens du
+// footer pointaient donc dans le vide sur les 7 pages du site.
+const STATIC_PAGES = {
+  '/mentions-legales': '/mentions-legales.html',
+  '/politique-confidentialite': '/politique-confidentialite.html',
+};
+
 const PAGE_404 = `<!doctype html>
 <html lang="fr"><head>
 <meta charset="utf-8">
@@ -97,6 +106,13 @@ export default {
     const path = url.pathname;
     const isAsset = /\.[a-z0-9]+$/i.test(path);
 
+    // Ancienne URL du fichier de design, gardee pour les favoris et liens
+    // externes. Le fichier faisait une redirection meta-refresh + JS, que les
+    // moteurs suivent mal et qui ne transmet pas de signal : vrai 301 ici.
+    if (/^\/EOMA(%20| )Traiteur(\.html)?$/i.test(path)) {
+      return Response.redirect(new URL('/', url).toString(), 301);
+    }
+
     // Etat de l'editeur de design, jamais deploye. Le composant image-slot le
     // demande sur chaque page : on renvoie un JSON vide plutot qu'un 404 qui
     // pollue la console et les logs. (Avant, le soft 404 lui renvoyait
@@ -111,18 +127,24 @@ export default {
       });
     }
 
+    const view = path.replace(/\/+$/, '') || '/';
+
     // 2. Vrai 404 sur les URLs inconnues (hors fichiers, geres par ASSETS)
-    if (!isAsset && !ROUTES.has(path.replace(/\/+$/, '') || '/')) {
+    if (!isAsset && !ROUTES.has(view) && !STATIC_PAGES[view]) {
       return new Response(PAGE_404, {
         status: 404,
         headers: { 'content-type': 'text/html; charset=utf-8' },
       });
     }
 
-    // Les routes SPA n'ont pas de fichier : on sert index.html
-    const assetReq = (!isAsset && path !== '/')
-      ? new Request(new URL('/', url).toString(), request)
-      : request;
+    // Les pages statiques servent leur propre fichier ; les routes SPA n'ont
+    // pas de fichier dedie, on leur sert index.html.
+    let assetReq = request;
+    if (STATIC_PAGES[view]) {
+      assetReq = new Request(new URL(STATIC_PAGES[view], url).toString(), request);
+    } else if (!isAsset && path !== '/') {
+      assetReq = new Request(new URL('/', url).toString(), request);
+    }
 
     const res = await env.ASSETS.fetch(assetReq);
     let out = new Response(res.body, res);
@@ -132,7 +154,6 @@ export default {
     // crawls) verrait donc les 7 sections et 7 H1 sur chaque URL. Le filtrage
     // cote client ne les aide pas : on retire ici les sections des autres vues.
     if (!isAsset && res.headers.get('content-type')?.includes('text/html')) {
-      const view = path.replace(/\/+$/, '') || '/';
       const page = PAGES[view];
       const canonical = 'https://eomatraiteur.fr' + (view === '/' ? '/' : view);
 
@@ -176,9 +197,13 @@ export default {
       out.headers.set('X-Robots-Tag', 'noindex, nofollow');
     }
 
-    // 4. Cache : /assets/ porte un UUID dans son nom, donc immuable
+    // 4. Cache : /assets/ porte un UUID dans son nom, donc immuable.
+    // /photos/, /uploads/ et les logos ne changent jamais non plus, mais leur
+    // nom est stable : cache long sans immutable, pour rester remplacables.
     if (path.startsWith('/assets/')) {
       out.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    } else if (/^\/(photos|uploads)\//.test(path) || /^\/logo-eoma(-light)?\.png$/.test(path) || path === '/favicon.ico') {
+      out.headers.set('Cache-Control', 'public, max-age=2592000');
     } else if (!isAsset) {
       out.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
     }
